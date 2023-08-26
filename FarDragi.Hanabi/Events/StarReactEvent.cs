@@ -39,7 +39,7 @@ public class StarReactEvent : IAutoLoaderEvents
         if (reaction.User.Value is not IGuildUser user)
             return;
 
-        if (message.Reactions.TryGetValue(starEmoji, out var starEmojiCount) && starEmojiCount.ReactionCount < 5)
+        if (message.Reactions.TryGetValue(starEmoji, out var starEmojiCount) && starEmojiCount.ReactionCount < 3)
             return;
         
         if (message.Reactions.TryGetValue(starGlowEmoji, out var starGlowEmojiCount) && starEmojiCount.ReactionCount > 0)
