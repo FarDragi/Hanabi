@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: FarDragi.Hanabi/Dockerfile
+      args:
+        GITHUB_NAME: ${GITHUB_NAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
       CHANNELS_STARBOARD: ${CHANNELS_STARBOARD}
