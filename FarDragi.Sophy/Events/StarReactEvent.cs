@@ -51,7 +51,7 @@ public class StarReactEvent : IAutoLoaderEvents
             return;
 
         var embed = new EmbedBuilder()
-            .WithTitle(message.Content)
+            .WithDescription(message.Content)
             .WithAuthor(new EmbedAuthorBuilder()
                 .WithName(user.DisplayName)
                 .WithIconUrl(user.GetDisplayAvatarUrl())
