@@ -5,6 +5,8 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["FarDragi.Hanabi/FarDragi.Hanabi.csproj", "FarDragi.Hanabi/"]
 
+ARG GITHUB_TOKEN
+ARG GITHUB_NAME
 RUN dotnet nuget add source --store-password-in-clear-text "https://nuget.pkg.github.com/Takasaki-Studio/index.json" --name github --username ${GITHUB_NAME} --password ${GITHUB_TOKEN}
 
 RUN dotnet restore "FarDragi.Hanabi/FarDragi.Hanabi.csproj"
