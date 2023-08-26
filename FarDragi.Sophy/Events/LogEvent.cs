@@ -1,14 +1,16 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using FarDragi.Sophy.Events.Interfaces;
 using FarDragi.Sophy.Services.Interfaces;
 using Lina.DynamicServicesProvider;
 using Lina.DynamicServicesProvider.Attributes;
 
-namespace FarDragi.Sophy.Events.Interfaces;
+namespace FarDragi.Sophy.Events;
 
 [Dependency(LifeTime.Transient, typeof(IAutoLoaderEvents))]
 public class LogEvent : IAutoLoaderEvents
-{private readonly ILogService _logService;
+{
+    private readonly ILogService _logService;
 
     public LogEvent(ILogService logService)
     {
