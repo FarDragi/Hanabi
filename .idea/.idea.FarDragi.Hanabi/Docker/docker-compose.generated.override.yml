@@ -1,0 +1,24 @@
+# This is a generated file. Not intended for manual editing.
+version: "3"
+services:
+  bot:
+    build:
+      context: "C:\\Users\\mrvul\\Documents\\workspace\\far-dragi\\FarDragi.Hanabi"
+      dockerfile: "FarDragi.Hanabi/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net6.0/FarDragi.Hanabi.dll"
+    environment:
+      DOTNET_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      NUGET_PACKAGES: "C:\\Users\\mrvul\\.nuget\\packages"
+      NUGET_FALLBACK_PACKAGES: "C:\\Users\\mrvul\\.nuget\\packages"
+    image: "fardragi.hanabi:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\mrvul\\.nuget\\packages:/root/.nuget/fallbackpackages"
+    - "C:\\Users\\mrvul\\Documents\\workspace\\far-dragi\\FarDragi.Hanabi\\FarDragi.Hanabi:/app:rw"
+    - "C:\\Users\\mrvul\\Documents\\workspace\\far-dragi\\FarDragi.Hanabi:/src:rw"
+    working_dir: "/app"

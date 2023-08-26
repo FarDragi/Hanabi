@@ -1,0 +1,10 @@
+﻿version: "3"
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: FarDragi.Hanabi/Dockerfile
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      CHANNELS_STARBOARD: ${CHANNELS_STARBOARD}
