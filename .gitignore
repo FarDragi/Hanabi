@@ -480,4 +480,4 @@ $RECYCLE.BIN/
 *.swp
 
 config.json
-*.env
+.env
