@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using FarDragi.Sophy.Events.Interfaces;
-using FarDragi.Sophy.Services.Interfaces;
+using FarDragi.Hanabi.Events.Interfaces;
+using FarDragi.Hanabi.Services.Interfaces;
 using Lina.DynamicServicesProvider.Attributes;
 using Microsoft.Extensions.Logging;
 
-namespace FarDragi.Sophy.Services;
+namespace FarDragi.Hanabi.Services;
 
 [Service(typeof(IEventLoaderService))]
 public class EventLoaderService : IEventLoaderService 

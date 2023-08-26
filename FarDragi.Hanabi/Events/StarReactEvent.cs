@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.WebSocket;
-using FarDragi.Sophy.Events.Interfaces;
-using FarDragi.Sophy.Models.Interfaces;
+using FarDragi.Hanabi.Events.Interfaces;
+using FarDragi.Hanabi.Models.Interfaces;
 using Lina.DynamicServicesProvider;
 using Lina.DynamicServicesProvider.Attributes;
 
-namespace FarDragi.Sophy.Events;
+namespace FarDragi.Hanabi.Events;
 
 [Dependency(LifeTime.Transient, typeof(IAutoLoaderEvents))]
 public class StarReactEvent : IAutoLoaderEvents

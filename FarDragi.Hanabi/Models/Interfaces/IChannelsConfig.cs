@@ -1,4 +1,4 @@
-﻿namespace FarDragi.Sophy.Models.Interfaces;
+﻿namespace FarDragi.Hanabi.Models.Interfaces;
 
 public interface IChannelsConfig
 {

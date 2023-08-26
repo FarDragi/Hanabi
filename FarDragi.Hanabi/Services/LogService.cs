@@ -1,9 +1,9 @@
 ﻿using Discord;
-using FarDragi.Sophy.Services.Interfaces;
+using FarDragi.Hanabi.Services.Interfaces;
 using Lina.DynamicServicesProvider.Attributes;
 using Microsoft.Extensions.Logging;
 
-namespace FarDragi.Sophy.Services;
+namespace FarDragi.Hanabi.Services;
 
 [Service(typeof(ILogService))]
 public class LogService : ILogService 

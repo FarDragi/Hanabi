@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarDragi.Sophy", "FarDragi.Sophy\FarDragi.Sophy.csproj", "{7A238AEF-FBC9-465C-943B-F96BC415134A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarDragi.Hanabi", "FarDragi.Hanabi\FarDragi.Hanabi.csproj", "{7A238AEF-FBC9-465C-943B-F96BC415134A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

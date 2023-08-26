@@ -1,6 +1,6 @@
 ﻿using Discord;
 
-namespace FarDragi.Sophy.Services.Interfaces;
+namespace FarDragi.Hanabi.Services.Interfaces;
 
 public interface ILogService
 {

@@ -1,8 +1,8 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using FarDragi.Sophy.Models.Interfaces;
-using FarDragi.Sophy.Services.Interfaces;
+using FarDragi.Hanabi.Models.Interfaces;
+using FarDragi.Hanabi.Services.Interfaces;
 using Lina.DynamicServicesProvider;
 using Lina.LoaderConfig;
 using Microsoft.Extensions.DependencyInjection;

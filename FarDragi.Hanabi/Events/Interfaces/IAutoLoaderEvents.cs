@@ -1,6 +1,6 @@
 ﻿using Discord.WebSocket;
 
-namespace FarDragi.Sophy.Events.Interfaces;
+namespace FarDragi.Hanabi.Events.Interfaces;
 
 public interface IAutoLoaderEvents
 {
