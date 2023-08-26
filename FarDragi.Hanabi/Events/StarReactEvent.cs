@@ -36,7 +36,7 @@ public class StarReactEvent : IAutoLoaderEvents
         if (await userMessage.GetOrDownloadAsync() is not IMessage message)
             return;
         
-        if (reaction.User.Value is not IGuildUser user)
+        if (message.Author is not IGuildUser {} user)
             return;
 
         if (message.Reactions.TryGetValue(starEmoji, out var starEmojiCount) && starEmojiCount.ReactionCount < 3)
@@ -57,10 +57,25 @@ public class StarReactEvent : IAutoLoaderEvents
                 .WithIconUrl(user.GetDisplayAvatarUrl())
             )
             .WithColor(new Color(0xedcd2d))
-            .WithTimestamp(DateTimeOffset.Now)
-            .Build();
+            .WithTimestamp(DateTimeOffset.Now);
 
-        await starBoard.SendMessageAsync(embed: embed);
+        var types = new string[]
+        {
+            "png",
+            "jpeg",
+            "webp",
+            "jpg",
+            "gif"
+        };
+
+        var attachment = message.Attachments.FirstOrDefault(x => types.Any(y => x.Url.EndsWith(y)));
+        
+        if (attachment is not null)
+        {
+            embed.WithImageUrl(attachment.Url);
+        }
+
+        await starBoard.SendMessageAsync(embed: embed.Build());
         await message.AddReactionAsync(starGlowEmoji);
     }
 }
