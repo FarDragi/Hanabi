@@ -22,7 +22,7 @@ public class EventLoaderService : IEventLoaderService
         _logger = logger;
     }
 
-    public void Init()
+    public void LoadEvents()
     {
         foreach (var @event in _events)
         {

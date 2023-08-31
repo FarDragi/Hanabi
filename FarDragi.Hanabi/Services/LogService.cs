@@ -33,9 +33,15 @@ public class LogService : ILogService
                 break;
             case LogSeverity.Critical:
             case LogSeverity.Error:
+                _logger.LogError("{} - {}", message.Source, message.Message);
+                break;
             case LogSeverity.Warning:
+                _logger.LogWarning("{} - {}", message.Source, message.Message);
+                break;
             case LogSeverity.Verbose:
             case LogSeverity.Debug:
+                _logger.LogDebug("{} - {}", message.Source, message.Message);
+                break;
             default:
                 _logger.LogWarning("{} - {}", message.Source, message.Message);
                 break;

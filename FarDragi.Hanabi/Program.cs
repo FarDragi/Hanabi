@@ -3,25 +3,32 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using FarDragi.Hanabi.Models.Interfaces;
 using FarDragi.Hanabi.Services.Interfaces;
+using Lina.Database;
 using Lina.DynamicServicesProvider;
 using Lina.LoaderConfig;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
+var client = new DiscordSocketClient(new DiscordSocketConfig()
+{
+    GatewayIntents = GatewayIntents.All
+});
+var interaction = new InteractionService(client.Rest);
 
 var serviceCollection = new ServiceCollection();
 
 var config = serviceCollection.AddLoaderConfig<IAppConfig>();
-var client = new DiscordSocketClient();
-var interaction = new InteractionService(client.Rest);
-
 serviceCollection.AddSingleton<IDiscordClient>(client);
 serviceCollection.AddSingleton(interaction);
 serviceCollection.AddDynamicServices<Program>();
 serviceCollection.AddLogging(builder => builder.AddConsole());
+serviceCollection.AddLinaDbContext<Program>((builder, assembly) => builder.UseMySql(config.Database.Url,
+    ServerVersion.AutoDetect(config.Database.Url), options => options.MigrationsAssembly(assembly)));
     
 var services = serviceCollection.BuildServiceProvider();
 
-services.GetRequiredService<IEventLoaderService>().Init();
+services.GetRequiredService<IEventLoaderService>().LoadEvents();
 
 await interaction.AddModulesAsync(typeof(Program).Assembly, services);
 

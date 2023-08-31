@@ -2,5 +2,5 @@
 
 public interface IEventLoaderService
 {
-    void Init();
+    void LoadEvents();
 }

@@ -1,0 +1,11 @@
+﻿{
+  "Bot": {
+    "Token": ""
+  },
+  "Channels": {
+    "StarBoard": 0
+  },
+  "Database": {
+    "Url": "Server=localhost;Database=hanabi;User Id=root;Password=root;"
+  }
+}

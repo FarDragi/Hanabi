@@ -3,4 +3,5 @@
 public interface IBotConfig
 {
     public string Token { get; }
+    public ulong OwnerGuild { get; }
 }

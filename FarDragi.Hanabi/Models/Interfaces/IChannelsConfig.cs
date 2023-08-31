@@ -2,5 +2,5 @@
 
 public interface IChannelsConfig
 {
-    public ulong StarBoard { get; set; }
+    public ulong StarBoard { get; }
 }
