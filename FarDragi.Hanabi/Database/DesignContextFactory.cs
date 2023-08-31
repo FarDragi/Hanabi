@@ -1,5 +1,6 @@
 ﻿using FarDragi.Hanabi.Models.Interfaces;
 using Lina.Database;
+using Lina.Database.Context;
 using Lina.LoaderConfig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -7,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FarDragi.Hanabi.Database;
 
-public class DesignContextFactory : IDesignTimeDbContextFactory<DbContext>
+public class DesignContextFactory : IDesignTimeDbContextFactory<LinaDbContext>
 {
-    public DbContext CreateDbContext(string[] args)
+    public LinaDbContext CreateDbContext(string[] args)
     {
         var serviceCollection = new ServiceCollection();
 
@@ -19,6 +20,6 @@ public class DesignContextFactory : IDesignTimeDbContextFactory<DbContext>
 
         var services = serviceCollection.BuildServiceProvider();
 
-        return services.GetRequiredService<DbContext>();
+        return services.GetRequiredService<LinaDbContext>();
     }
 }
