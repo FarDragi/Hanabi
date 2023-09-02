@@ -2,7 +2,7 @@
 
 namespace FarDragi.Hanabi.Services.Interfaces;
 
-public interface IEventService
+public interface IInviteService
 {
-    Task<EventDto> Add(EventDto newEvent);
+    Task<InviteDto> AddOrUpdate(InviteDto dto);
 }

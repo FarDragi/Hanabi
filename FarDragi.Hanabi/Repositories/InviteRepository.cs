@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FarDragi.Hanabi.Repositories;
 
-[Repository(typeof(IEventRepository))]
-public class EventRepository : BaseRepository<EventEntity, uint>, IEventRepository
+[Repository(typeof(IInviteRepository))]
+public class InviteRepository : BaseRepository<InviteEntity, string>, IInviteRepository
 {
-    public EventRepository(DbContext dbContext) : base(dbContext)
+    public InviteRepository(DbContext dbContext) : base(dbContext)
     {
     }
 }

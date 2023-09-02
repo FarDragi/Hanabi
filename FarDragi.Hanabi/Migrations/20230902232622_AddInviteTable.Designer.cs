@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarDragi.Hanabi.Migrations
 {
     [DbContext(typeof(LinaDbContext))]
-    [Migration("20230831145441_Init")]
-    partial class Init
+    [Migration("20230902232622_AddInviteTable")]
+    partial class AddInviteTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,6 +19,23 @@ namespace FarDragi.Hanabi.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "6.0.21")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            modelBuilder.Entity("FarDragi.Hanabi.Models.InviteEntity", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
+
+                    b.Property<ulong>("UserId")
+                        .HasColumnType("bigint unsigned");
+
+                    b.Property<int>("Uses")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Invites", (string)null);
+                });
 #pragma warning restore 612, 618
         }
     }
