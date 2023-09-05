@@ -60,9 +60,6 @@ public class InviteEvent : IAutoLoaderEvents
     {
         var guildInvites = await user.Guild.GetInvitesAsync();
 
-        var changeInvite =
-            await _inviteService.CheckInvites(guildInvites.Select(x => new InviteDto(x.Id, x.Uses ?? 0, x.Inviter.Id)));
-
-        await _inviteService.AddOneUse(changeInvite.Id);
+        await _inviteService.UpdateInvites(guildInvites.Select(x => new InviteDto(x.Id, x.Uses ?? 0, x.Inviter.Id)));
     }
 }

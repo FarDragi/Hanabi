@@ -10,10 +10,12 @@ namespace FarDragi.Hanabi.Services;
 public class InviteService : IInviteService
 {
     private readonly IInviteRepository _inviteRepository;
+    private readonly ICandyService _candyService;
 
-    public InviteService(IInviteRepository inviteRepository)
+    public InviteService(IInviteRepository inviteRepository, ICandyService candyService)
     {
         _inviteRepository = inviteRepository;
+        _candyService = candyService;
     }
 
     public async Task<InviteDto> AddOrUpdateInvite(InviteDto dto)
@@ -47,7 +49,7 @@ public class InviteService : IInviteService
         await _inviteRepository.Commit();
     }
 
-    public async Task<InviteDto> CheckInvites(IEnumerable<InviteDto> invites)
+    private async Task<InviteDto> CheckInvites(IEnumerable<InviteDto> invites)
     {
         var entity = await _inviteRepository.Get(x => invites.Any(y => y.Id == x.Id && y.Uses > x.Uses));
 
@@ -57,7 +59,7 @@ public class InviteService : IInviteService
         return entity;
     }
 
-    public async Task<InviteDto> AddOneUse(string id)
+    private async Task<InviteDto> AddOneUse(string id)
     {
         var entity = await _inviteRepository.GetById(id);
 
@@ -70,5 +72,17 @@ public class InviteService : IInviteService
         await _inviteRepository.Commit();
 
         return entity;
+    }
+
+    public async Task<InviteDto> UpdateInvites(IEnumerable<InviteDto> invites)
+    {
+        var changeInvite = await CheckInvites(invites);
+
+        await AddOneUse(changeInvite.Id);
+
+        if (_candyService.IsCandyEvent())
+            await _candyService.AddCandies(new CandyDto(changeInvite.UserId, 15));
+
+        return changeInvite;
     }
 }

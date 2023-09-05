@@ -2,6 +2,7 @@
 using Lina.Database.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarDragi.Hanabi.Migrations
 {
     [DbContext(typeof(LinaDbContext))]
-    partial class LinaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230905141153_AddCandyTable")]
+    partial class AddCandyTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -6,6 +6,5 @@ public interface IInviteService
 {
     Task<InviteDto> AddOrUpdateInvite(InviteDto dto);
     Task DeleteInvite(string id);
-    Task<InviteDto> CheckInvites(IEnumerable<InviteDto> invites);
-    Task<InviteDto> AddOneUse(string id);
+    Task<InviteDto> UpdateInvites(IEnumerable<InviteDto> invites);
 }
