@@ -1,4 +1,5 @@
-﻿using FarDragi.Hanabi.Exceptions;
+﻿using Discord;
+using FarDragi.Hanabi.Exceptions;
 using FarDragi.Hanabi.Models;
 using FarDragi.Hanabi.Repositories.Interfaces;
 using FarDragi.Hanabi.Services.Interfaces;
@@ -11,11 +12,16 @@ public class InviteService : IInviteService
 {
     private readonly IInviteRepository _inviteRepository;
     private readonly ICandyService _candyService;
+    private readonly ITreatingService _treatingService;
+    private readonly IDiscordClient _discordClient;
 
-    public InviteService(IInviteRepository inviteRepository, ICandyService candyService)
+    public InviteService(IInviteRepository inviteRepository, ICandyService candyService,
+        ITreatingService treatingService, IDiscordClient discordClient)
     {
         _inviteRepository = inviteRepository;
         _candyService = candyService;
+        _treatingService = treatingService;
+        _discordClient = discordClient;
     }
 
     public async Task<InviteDto> AddOrUpdateInvite(InviteDto dto)
@@ -51,7 +57,9 @@ public class InviteService : IInviteService
 
     private async Task<InviteDto> CheckInvites(IEnumerable<InviteDto> invites)
     {
-        var entity = await _inviteRepository.Get(x => invites.Any(y => y.Id == x.Id && y.Uses > x.Uses));
+        var entities = await _inviteRepository.GetAll(x => true);
+
+        var entity = entities.FirstOrDefault(x => invites.Any(y => x.Id == y.Id && x.Uses < y.Uses));
 
         if (entity is null)
             throw new NotFoundException($"Invite not found");
@@ -80,8 +88,13 @@ public class InviteService : IInviteService
 
         await AddOneUse(changeInvite.Id);
 
-        if (_candyService.IsCandyEvent())
-            await _candyService.AddCandies(new CandyDto(changeInvite.UserId, 15));
+        var user = await _discordClient.GetUserAsync(changeInvite.UserId);
+
+        if (user.IsBot || !_candyService.IsCandyEvent())
+            return changeInvite;
+        
+        await _candyService.AddCandies(new CandyDto(changeInvite.UserId, 15));
+        await _treatingService.AddOneTreating(changeInvite.UserId);
 
         return changeInvite;
     }

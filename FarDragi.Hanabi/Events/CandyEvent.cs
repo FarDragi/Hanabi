@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using FarDragi.Hanabi.Events.Interfaces;
 using FarDragi.Hanabi.Models;
+using FarDragi.Hanabi.Models.Interfaces;
 using FarDragi.Hanabi.Services.Interfaces;
 using Lina.DynamicServicesProvider;
 using Lina.DynamicServicesProvider.Attributes;
@@ -12,11 +13,14 @@ namespace FarDragi.Hanabi.Events;
 public class CandyEvent : IAutoLoaderEvents
 {
     private readonly ICandyService _candyService;
+    private readonly IAppConfig _appConfig;
+    
     private readonly string[] _candies;
 
-    public CandyEvent(ICandyService candyService)
+    public CandyEvent(ICandyService candyService, IAppConfig appConfig)
     {
         _candyService = candyService;
+        _appConfig = appConfig;
         _candies = new[] { "🍬", "🍭", "🍪", "🍩", "🧆", "🍫" };
     }
 
@@ -29,6 +33,9 @@ public class CandyEvent : IAutoLoaderEvents
     private async Task DiscordClientOnReactionAdded(Cacheable<IUserMessage, ulong> userMessage,
         Cacheable<IMessageChannel, ulong> channelMessage, SocketReaction reaction)
     {
+        if (!_candyService.IsCandyEvent())
+            return;
+        
         if (await userMessage.GetOrDownloadAsync() is not IMessage message)
             return;
         
@@ -42,9 +49,6 @@ public class CandyEvent : IAutoLoaderEvents
         
         if (emoji is null)
             return;
-        
-        if (!_candyService.IsCandyEvent())
-            return;
 
         await _candyService.AddCandies(new CandyDto(reaction.UserId, 1));
         await message.RemoveAllReactionsForEmoteAsync(new Emoji(emoji));
@@ -53,6 +57,9 @@ public class CandyEvent : IAutoLoaderEvents
     private async Task DiscordClientOnMessageReceived(SocketMessage message)
     {
         if (!_candyService.IsCandyEvent())
+            return;
+        
+        if (message.Channel.Id != _appConfig.Channels.CandyDrop)
             return;
             
         var random = new Random().Next(1, 100);
