@@ -36,4 +36,12 @@ public class HalloweenService : IHalloweenService
 
         return (true, treating);
     }
+
+    public async Task<(CandyDto?, TreatingDto?)> UserInfo(ulong id)
+    {
+        var treating = await _treatingRepository.GetById(id);
+        var candy = await _candyRepository.GetById(id);
+        
+        return (candy, treating);
+    }
 }

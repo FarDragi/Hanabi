@@ -28,9 +28,9 @@ public class CandyEntity : BaseEntity<ulong>
         return new CandyEntity(dto.Id, dto.Count);
     }
 
-    public static implicit operator CandyDto(CandyEntity entity)
+    public static implicit operator CandyDto?(CandyEntity? entity)
     {
-        return new CandyDto(entity.Id, entity.Count);
+        return entity is null ? null : new CandyDto(entity.Id, entity.Count);
     }
 
     #endregion

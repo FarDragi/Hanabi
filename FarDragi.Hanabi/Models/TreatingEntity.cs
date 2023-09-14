@@ -33,9 +33,9 @@ public class TreatingEntity : BaseEntity<ulong>
         return new TreatingEntity(dto.Id, dto.Count);
     }
 
-    public static implicit operator TreatingDto(TreatingEntity entity)
+    public static implicit operator TreatingDto?(TreatingEntity? entity)
     {
-        return new TreatingDto(entity.Id, entity.Count);
+        return entity is null ? null : new TreatingDto(entity.Id, entity.Count);
     }
 
     #endregion
