@@ -10,5 +10,28 @@ public class CandyEntity : BaseEntity<ulong>
         Count = count;
     }
 
-    public int Count { get; set; }
+    public int Count { get; private set; }
+
+    public bool TreatingCandy(TreatingEntity treating)
+    {
+        if (!treating.RemoveOne())
+            return false;
+        
+        Count -= 10;
+        return true;
+    }
+
+    #region Conversions
+
+    public static implicit operator CandyEntity(CandyDto dto)
+    {
+        return new CandyEntity(dto.Id, dto.Count);
+    }
+
+    public static implicit operator CandyDto(CandyEntity entity)
+    {
+        return new CandyDto(entity.Id, entity.Count);
+    }
+
+    #endregion
 }

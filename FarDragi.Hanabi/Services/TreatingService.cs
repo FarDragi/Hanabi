@@ -26,7 +26,7 @@ public class TreatingService : ITreatingService
         }
         else
         {
-            entity.Count++;
+            //entity.Count++;
             _treatingRepository.Update(entity);
         }
         

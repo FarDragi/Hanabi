@@ -35,7 +35,7 @@ public class CandyService : ICandyService
         }
         else
         {
-            entity.Count += dto.Count;
+            //entity.Count += dto.Count;
             _candyRepository.Update(entity);
         }
 

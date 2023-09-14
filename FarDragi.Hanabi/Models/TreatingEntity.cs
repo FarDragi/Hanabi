@@ -10,5 +10,33 @@ public class TreatingEntity : BaseEntity<ulong>
         Count = count;
     }
 
-    public int Count { get; set; }
+    public int Count { get; private set; }
+
+    public bool HasTreating()
+    {
+        return Count > 0;
+    }
+
+    public bool RemoveOne()
+    {
+        if (!HasTreating())
+            return false;
+        
+        Count -= 1;
+        return true;
+    }
+
+    #region Conversions
+
+    public static implicit operator TreatingEntity(TreatingDto dto)
+    {
+        return new TreatingEntity(dto.Id, dto.Count);
+    }
+
+    public static implicit operator TreatingDto(TreatingEntity entity)
+    {
+        return new TreatingDto(entity.Id, entity.Count);
+    }
+
+    #endregion
 }

@@ -11,3 +11,20 @@ services:
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
       CHANNELS_STARBOARD: ${CHANNELS_STARBOARD}
+    restart: always
+  database:
+    image: mariadb:10.11.5
+    container_name: kurosawa_dia_db
+    restart: always
+    volumes:
+      - mariadb:/var/lib/mysql
+    environment:
+      MARIADB_ROOT_PASSWORD: ${KUROSAWA_DATABASE_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "--silent" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+volumes: 
+  mariadb:
