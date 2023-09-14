@@ -1,4 +1,5 @@
-﻿using Lina.Database.Models;
+﻿using FarDragi.Hanabi.Exceptions;
+using Lina.Database.Models;
 
 namespace FarDragi.Hanabi.Models;
 
@@ -12,18 +13,21 @@ public class TreatingEntity : BaseEntity<ulong>
 
     public int Count { get; private set; }
 
-    public bool HasTreating()
-    {
-        return Count > 0;
-    }
-
     public bool RemoveOne()
     {
-        if (!HasTreating())
+        if (Count <= 0)
             return false;
         
         Count -= 1;
         return true;
+    }
+
+    public void AddOne()
+    {
+        if (!HalloweenEntity.IsHalloween())
+            throw new HalloweenException("It is not Halloween");
+
+        Count += 1;
     }
 
     #region Conversions
@@ -33,9 +37,9 @@ public class TreatingEntity : BaseEntity<ulong>
         return new TreatingEntity(dto.Id, dto.Count);
     }
 
-    public static implicit operator TreatingDto?(TreatingEntity? entity)
+    public static implicit operator TreatingDto(TreatingEntity entity)
     {
-        return entity is null ? null : new TreatingDto(entity.Id, entity.Count);
+        return new TreatingDto(entity.Id, entity.Count);
     }
 
     #endregion
