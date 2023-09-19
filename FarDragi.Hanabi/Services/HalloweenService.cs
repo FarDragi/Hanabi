@@ -132,6 +132,9 @@ public class HalloweenService : IHalloweenService
         var treating = await _treatingRepository.GetById(userId);
         var candy = await _candyRepository.GetById(userId);
 
+        if (candy is not null && treating is not null)
+            return (candy, treating);
+        
         if (candy is null && treating is not null)
             return (null, treating);
 
