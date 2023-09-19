@@ -95,12 +95,16 @@ public class HalloweenEvent : IAutoLoaderEvents
         
         if (message.Channel.Id != _appConfig.Channels.CandyDrop)
             return;
-            
+
+#if DEBUG            
+        await message.AddReactionAsync(new Emoji(_candies[new Random().Next(0, _candies.Length - 1)]));
+#else
         var random = new Random().Next(1, 100);
 
         if (random is >= 0 and < 5)
         {
             await message.AddReactionAsync(new Emoji(_candies[new Random().Next(0, _candies.Length - 1)]));
         }
+#endif
     }
 }

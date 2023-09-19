@@ -46,10 +46,10 @@ public class HalloweenCommands : InteractionModuleBase
             {
                 new EmbedFieldBuilder()
                     .WithName("🍬 Doces")
-                    .WithValue(candy?.Count ?? 0),
+                    .WithValue((candy?.Count ?? 0).ToString()),
                 new EmbedFieldBuilder()
                     .WithName("🕸️ Travessuras")
-                    .WithValue(treating?.Count ?? 0)
+                    .WithValue((treating?.Count ?? 0).ToString())
             });
 
         await RespondAsync(embed: embed.Build());

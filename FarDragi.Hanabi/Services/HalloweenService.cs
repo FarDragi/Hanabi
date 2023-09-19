@@ -131,8 +131,14 @@ public class HalloweenService : IHalloweenService
     {
         var treating = await _treatingRepository.GetById(userId);
         var candy = await _candyRepository.GetById(userId);
-        
-        return (candy is null ? null : candy, treating is null ? null : treating);
+
+        if (candy is null && treating is not null)
+            return (null, treating);
+
+        if (treating is null && candy is not null)
+            return (candy, null);
+
+        return (null, null);
     }
 
     public async Task<CandyDto> AddManualCandies(ulong userId, int amount)
