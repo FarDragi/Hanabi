@@ -69,7 +69,7 @@ public class HalloweenService : IHalloweenService
         var candy = await _candyRepository.GetById(invite.UserId);
         var treating = await _treatingRepository.GetById(invite.UserId);
 
-        candy ??= new CandyEntity(invite.UserId, 0);
+        candy ??= new CandyEntity(invite.UserId);
         treating ??= new TreatingEntity(invite.UserId, 0);
         
         invite.AddOneUse(treating, candy);
@@ -92,7 +92,8 @@ public class HalloweenService : IHalloweenService
 
         if (candy is null)
         {
-            candy = new CandyEntity(userId, 1);
+            candy = new CandyEntity(userId);
+            candy.AddCandy(1);
             await _candyRepository.Add(candy);
         }
         else
@@ -132,5 +133,27 @@ public class HalloweenService : IHalloweenService
         var candy = await _candyRepository.GetById(userId);
         
         return (candy is null ? null : candy, treating is null ? null : treating);
+    }
+
+    public async Task<CandyDto> AddManualCandies(ulong userId, int amount)
+    {
+        
+        var candy = await _candyRepository.GetById(userId);
+
+        if (candy is null)
+        {
+            candy = new CandyEntity(userId);
+            candy.AddCandy(amount);
+            await _candyRepository.Add(candy);
+        }
+        else
+        {
+            candy.AddCandy(amount);
+            _candyRepository.Update(candy);
+        }
+
+        await _candyRepository.Commit();
+
+        return candy;
     }
 }

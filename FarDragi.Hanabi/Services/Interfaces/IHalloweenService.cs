@@ -11,4 +11,5 @@ public interface IHalloweenService
     Task<InviteDto> UpdateInvite(InviteDto inviteDto);
     Task DeleteInvite(string inviteId);
     Task<InviteDto> AddTreating(IEnumerable<InviteDto> invitesDto);
+    Task<CandyDto> AddManualCandies(ulong userId, int amount);
 }

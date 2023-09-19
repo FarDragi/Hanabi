@@ -9,6 +9,8 @@ public class HalloweenCommands : InteractionModuleBase
 {
     private readonly IHalloweenService _halloweenService;
 
+    private const int OrangeColor = 0xd6a018;
+
     public HalloweenCommands(IHalloweenService halloweenService)
     {
         _halloweenService = halloweenService;
@@ -38,7 +40,7 @@ public class HalloweenCommands : InteractionModuleBase
 
         var embed = new EmbedBuilder()
             .WithTitle($"Halloween {user.DisplayName} status")
-            .WithColor(0xd6a018)
+            .WithColor(OrangeColor)
             .WithThumbnailUrl(user.GetDisplayAvatarUrl())
             .WithFields(new[]
             {
@@ -51,5 +53,28 @@ public class HalloweenCommands : InteractionModuleBase
             });
 
         await RespondAsync(embed: embed.Build());
+    }
+
+    [SlashCommand("candy-add", "Adicionar doces manualmente")]
+    [RequireUserPermission(GuildPermission.Administrator)]
+    public async Task CandyAdd([Summary("target", "Usuario alvo")] IGuildUser targetUser, [Summary("amount", "Quantidade de doces")] int amount)
+    {
+        if (targetUser.IsBot)
+        {
+            var isBotEmbed = new EmbedBuilder()
+                .WithTitle("O usuario selecionado é um bot")
+                .WithColor(OrangeColor);
+
+            await RespondAsync(embed: isBotEmbed.Build(), ephemeral: true);
+            return;
+        }
+        
+        var candy = await _halloweenService.AddManualCandies(targetUser.Id, amount);
+
+        var responseEmbed = new EmbedBuilder()
+            .WithTitle($"{targetUser.DisplayName} agora esta com {candy.Count} doces")
+            .WithColor(OrangeColor);
+
+        await RespondAsync(embed: responseEmbed.Build());
     }
 }

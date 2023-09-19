@@ -5,22 +5,25 @@ namespace FarDragi.Hanabi.Models;
 
 public class CandyEntity : BaseEntity<ulong>
 {
-    public CandyEntity(ulong id, int count)
+    public CandyEntity()
     {
-        Id = id;
-        Count = count;
     }
 
-    public int Count { get; private set; }
+    public CandyEntity(ulong id)
+    {
+        Id = id;
+    }
+
+    public int Count { get; private set; } = 0;
 
     public bool TreatingCandy(TreatingEntity treating)
     {
         if (!HalloweenEntity.IsHalloween())
             throw new HalloweenException("It is not Halloween");
-        
+
         if (!treating.RemoveOne())
             return false;
-        
+
         Count -= 10;
         return true;
     }
@@ -37,7 +40,11 @@ public class CandyEntity : BaseEntity<ulong>
 
     public static implicit operator CandyEntity(CandyDto dto)
     {
-        return new CandyEntity(dto.Id, dto.Count);
+        return new CandyEntity()
+        {
+            Id = dto.Id,
+            Count = dto.Count
+        };
     }
 
     public static implicit operator CandyDto(CandyEntity entity)
