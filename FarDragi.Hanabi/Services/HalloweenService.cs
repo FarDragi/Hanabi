@@ -70,7 +70,7 @@ public class HalloweenService : IHalloweenService
         var treating = await _treatingRepository.GetById(invite.UserId);
 
         candy ??= new CandyEntity(invite.UserId);
-        treating ??= new TreatingEntity(invite.UserId, 0);
+        treating ??= new TreatingEntity(invite.UserId);
         
         invite.AddOneUse(treating, candy);
         
@@ -161,5 +161,26 @@ public class HalloweenService : IHalloweenService
         await _candyRepository.Commit();
 
         return candy;
+    }
+    
+    public async Task<TreatingDto> AddManualTreating(ulong userId, int amount)
+    {
+        var treating = await _treatingRepository.GetById(userId);
+
+        if (treating is null)
+        {
+            treating = new TreatingEntity(userId);
+            treating.AddTreating(amount);
+            await _treatingRepository.Add(treating);
+        }
+        else
+        {
+            treating.AddTreating(amount);
+            _treatingRepository.Update(treating);
+        }
+
+        await _treatingRepository.Commit();
+
+        return treating;
     }
 }

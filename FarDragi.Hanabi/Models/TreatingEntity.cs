@@ -5,36 +5,43 @@ namespace FarDragi.Hanabi.Models;
 
 public class TreatingEntity : BaseEntity<ulong>
 {
-    public TreatingEntity(ulong id, int count)
+    public TreatingEntity()
     {
-        Id = id;
-        Count = count;
     }
 
-    public int Count { get; private set; }
+    public TreatingEntity(ulong id)
+    {
+        Id = id;
+    }
+
+    public int Count { get; private set; } = 0;
 
     public bool RemoveOne()
     {
         if (Count <= 0)
             return false;
-        
+
         Count -= 1;
         return true;
     }
-
-    public void AddOne()
+    
+    public void AddTreating(int value)
     {
         if (!HalloweenEntity.IsHalloween())
             throw new HalloweenException("It is not Halloween");
 
-        Count += 1;
+        Count += value;
     }
 
     #region Conversions
 
     public static implicit operator TreatingEntity(TreatingDto dto)
     {
-        return new TreatingEntity(dto.Id, dto.Count);
+        return new TreatingEntity()
+        {
+            Id = dto.Id,
+            Count = dto.Count
+        };
     }
 
     public static implicit operator TreatingDto(TreatingEntity entity)

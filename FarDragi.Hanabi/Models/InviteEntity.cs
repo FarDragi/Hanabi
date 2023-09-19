@@ -30,7 +30,7 @@ public class InviteEntity : BaseEntity<string>
         
         Uses++;
 
-        treating.AddOne();
+        treating.AddTreating(1);
         candy.AddCandy(15);
     }
 

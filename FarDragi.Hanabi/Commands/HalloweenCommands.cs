@@ -18,7 +18,17 @@ public class HalloweenCommands : InteractionModuleBase
 
     [SlashCommand("treating", "Fazer uma travessura com alguém")]
     public async Task Treating([Summary("target", "Usuario alvo")] IGuildUser targetUser)
-    {
+    {        
+        if (targetUser.IsBot)
+        {
+            var isBotEmbed = new EmbedBuilder()
+                .WithTitle("O usuario selecionado é um bot")
+                .WithColor(OrangeColor);
+
+            await RespondAsync(embed: isBotEmbed.Build(), ephemeral: true);
+            return;
+        }
+        
         var (ok, treating) = await _halloweenService.Treating(Context.User.Id, targetUser.Id);
 
         if (!ok)
@@ -35,6 +45,16 @@ public class HalloweenCommands : InteractionModuleBase
     public async Task Info([Summary("target", "Usuario alvo")] IGuildUser? targetUser = null)
     {
         var user = await Context.Guild.GetUserAsync(targetUser?.Id ?? Context.User.Id);
+        
+        if (user.IsBot)
+        {
+            var isBotEmbed = new EmbedBuilder()
+                .WithTitle("O usuario selecionado é um bot")
+                .WithColor(OrangeColor);
+
+            await RespondAsync(embed: isBotEmbed.Build(), ephemeral: true);
+            return;
+        }
         
         var (candy, treating) = await _halloweenService.UserInfo(user.Id);
 
@@ -57,7 +77,8 @@ public class HalloweenCommands : InteractionModuleBase
 
     [SlashCommand("candy-add", "Adicionar doces manualmente")]
     [RequireUserPermission(GuildPermission.Administrator)]
-    public async Task CandyAdd([Summary("target", "Usuario alvo")] IGuildUser targetUser, [Summary("amount", "Quantidade de doces")] int amount)
+    public async Task CandyAdd([Summary("target", "Usuario alvo")] IGuildUser targetUser,
+        [Summary("amount", "Quantidade de doces")] int amount)
     {
         if (targetUser.IsBot)
         {
@@ -73,6 +94,30 @@ public class HalloweenCommands : InteractionModuleBase
 
         var responseEmbed = new EmbedBuilder()
             .WithTitle($"{targetUser.DisplayName} agora esta com {candy.Count} doces")
+            .WithColor(OrangeColor);
+
+        await RespondAsync(embed: responseEmbed.Build());
+    }
+
+    [SlashCommand("treating-add", "Adicionar travesuras manualmente")]
+    [RequireUserPermission(GuildPermission.Administrator)]
+    public async Task TreatingAdd([Summary("target", "Usuario alvo")] IGuildUser targetUser,
+        [Summary("amount", "Quantidade de travesuras")] int amount)
+    {
+        if (targetUser.IsBot)
+        {
+            var isBotEmbed = new EmbedBuilder()
+                .WithTitle("O usuario selecionado é um bot")
+                .WithColor(OrangeColor);
+
+            await RespondAsync(embed: isBotEmbed.Build(), ephemeral: true);
+            return;
+        }
+        
+        var treating = await _halloweenService.AddManualTreating(targetUser.Id, amount);
+
+        var responseEmbed = new EmbedBuilder()
+            .WithTitle($"{targetUser.DisplayName} agora esta com {treating.Count} travesuras")
             .WithColor(OrangeColor);
 
         await RespondAsync(embed: responseEmbed.Build());
