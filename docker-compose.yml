@@ -8,18 +8,23 @@ services:
       args:
         GITHUB_NAME: ${GITHUB_NAME}
         GITHUB_TOKEN: ${GITHUB_TOKEN}
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
+      BOT_OWNERGUILD: ${BOT_OWNERGUILD}
       CHANNELS_STARBOARD: ${CHANNELS_STARBOARD}
-    restart: always
+      CHANNELS_CANDYDROP: ${CHANNELS_CANDYDROP}
+      DATABASE_URL: Server=localhost;Database=hanabi;User Id=root;Password=${DATABASE_PASSWORD};
   database:
     image: mariadb:10.11.5
-    container_name: kurosawa_dia_db
     restart: always
     volumes:
       - mariadb:/var/lib/mysql
     environment:
-      MARIADB_ROOT_PASSWORD: ${KUROSAWA_DATABASE_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DATABASE_PASSWORD}
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "--silent" ]
       interval: 10s
