@@ -1,5 +1,6 @@
 ﻿using FarDragi.Hanabi.Exceptions;
 using FarDragi.Hanabi.Models;
+using FarDragi.Hanabi.Models.Interfaces;
 using FarDragi.Hanabi.Repositories.Interfaces;
 using FarDragi.Hanabi.Services.Interfaces;
 using Lina.DynamicServicesProvider.Attributes;
@@ -12,13 +13,15 @@ public class HalloweenService : IHalloweenService
     private readonly ICandyRepository _candyRepository;
     private readonly ITreatingRepository _treatingRepository;
     private readonly IInviteRepository _inviteRepository;
+    private readonly IAppConfig _appConfig;
 
     public HalloweenService(ICandyRepository candyRepository, ITreatingRepository treatingRepository,
-        IInviteRepository inviteRepository)
+        IInviteRepository inviteRepository, IAppConfig appConfig)
     {
         _candyRepository = candyRepository;
         _treatingRepository = treatingRepository;
         _inviteRepository = inviteRepository;
+        _appConfig = appConfig;
     }
 
     public bool IsHalloween()
@@ -71,18 +74,23 @@ public class HalloweenService : IHalloweenService
 
         candy ??= new CandyEntity(invite.UserId);
         treating ??= new TreatingEntity(invite.UserId);
-        
-        invite.AddOneUse(treating, candy);
-        
-        _inviteRepository.Update(invite);
-        await _inviteRepository.Commit();
-        
-        _candyRepository.Update(candy);
-        await _candyRepository.Commit();
-        
-        _treatingRepository.Update(treating);
-        await _treatingRepository.Commit();
 
+        try
+        {
+            invite.AddOneUse(treating, candy, _appConfig);
+
+            _candyRepository.Update(candy);
+            await _candyRepository.Commit();
+
+            _treatingRepository.Update(treating);
+            await _treatingRepository.Commit();
+        }
+        finally
+        {
+            _inviteRepository.Update(invite);
+            await _inviteRepository.Commit();
+        }
+        
         return invite;
     }
 
@@ -93,12 +101,12 @@ public class HalloweenService : IHalloweenService
         if (candy is null)
         {
             candy = new CandyEntity(userId);
-            candy.AddCandy(1);
+            candy.AddCandy(1, _appConfig);
             await _candyRepository.Add(candy);
         }
         else
         {
-            candy.AddCandy(1);
+            candy.AddCandy(1, _appConfig);
             _candyRepository.Update(candy);
         }
 
@@ -152,12 +160,12 @@ public class HalloweenService : IHalloweenService
         if (candy is null)
         {
             candy = new CandyEntity(userId);
-            candy.AddCandy(amount);
+            candy.AddCandy(amount, _appConfig);
             await _candyRepository.Add(candy);
         }
         else
         {
-            candy.AddCandy(amount);
+            candy.AddCandy(amount, _appConfig);
             _candyRepository.Update(candy);
         }
 
@@ -173,12 +181,12 @@ public class HalloweenService : IHalloweenService
         if (treating is null)
         {
             treating = new TreatingEntity(userId);
-            treating.AddTreating(amount);
+            treating.AddTreating(amount, _appConfig);
             await _treatingRepository.Add(treating);
         }
         else
         {
-            treating.AddTreating(amount);
+            treating.AddTreating(amount, _appConfig);
             _treatingRepository.Update(treating);
         }
 

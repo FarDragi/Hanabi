@@ -1,4 +1,5 @@
 ﻿using FarDragi.Hanabi.Exceptions;
+using FarDragi.Hanabi.Models.Interfaces;
 using Lina.Database.Models;
 
 namespace FarDragi.Hanabi.Models;
@@ -28,8 +29,11 @@ public class CandyEntity : BaseEntity<ulong>
         return true;
     }
 
-    public void AddCandy(int value)
+    public void AddCandy(int value, IAppConfig config)
     {
+        if (config.Event.Exclude.Contains(Id))
+            throw new HalloweenException("User is exclude from event");
+        
         if (!HalloweenEntity.IsHalloween())
             throw new HalloweenException("It is not Halloween");
 

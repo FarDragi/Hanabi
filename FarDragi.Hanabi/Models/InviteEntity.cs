@@ -1,4 +1,5 @@
 ﻿using FarDragi.Hanabi.Exceptions;
+using FarDragi.Hanabi.Models.Interfaces;
 using Lina.Database.Models;
 
 namespace FarDragi.Hanabi.Models;
@@ -23,15 +24,12 @@ public class InviteEntity : BaseEntity<string>
         Uses = uses;
     }
 
-    public void AddOneUse(TreatingEntity treating, CandyEntity candy)
+    public void AddOneUse(TreatingEntity treating, CandyEntity candy, IAppConfig config)
     {
-        if (!HalloweenEntity.IsHalloween())
-            throw new HalloweenException("It is not Halloween");
-        
         Uses++;
 
-        treating.AddTreating(1);
-        candy.AddCandy(15);
+        treating.AddTreating(1, config);
+        candy.AddCandy(15, config);
     }
 
     #region Conversions
