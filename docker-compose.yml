@@ -17,7 +17,7 @@ services:
       BOT_OWNERGUILD: ${BOT_OWNERGUILD}
       CHANNELS_STARBOARD: ${CHANNELS_STARBOARD}
       CHANNELS_CANDYDROP: ${CHANNELS_CANDYDROP}
-      DATABASE_URL: Server=localhost;Database=hanabi;User Id=root;Password=${DATABASE_PASSWORD};
+      DATABASE_URL: Server=database;Database=hanabi;User Id=root;Password=${DATABASE_PASSWORD};
   database:
     image: mariadb:10.11.5
     restart: always
