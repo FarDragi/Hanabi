@@ -1,11 +1,17 @@
 ﻿{
   "Bot": {
-    "Token": ""
+    "Token": "",
+    "OwnerGuild": 0
   },
   "Channels": {
-    "StarBoard": 0
+    "StarBoard": 0,
+    "CandyDrop": 0
   },
   "Database": {
     "Url": "Server=localhost;Database=hanabi;User Id=root;Password=root;"
+  },
+  "Event": {
+    "Exclude": [
+    ]
   }
 }
