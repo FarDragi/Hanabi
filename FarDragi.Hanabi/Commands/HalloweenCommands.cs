@@ -80,16 +80,6 @@ public class HalloweenCommands : InteractionModuleBase
     public async Task CandyAdd([Summary("target", "Usuario alvo")] IGuildUser targetUser,
         [Summary("amount", "Quantidade de doces")] int amount)
     {
-        if (targetUser.IsBot)
-        {
-            var isBotEmbed = new EmbedBuilder()
-                .WithTitle("O usuario selecionado é um bot")
-                .WithColor(OrangeColor);
-
-            await RespondAsync(embed: isBotEmbed.Build(), ephemeral: true);
-            return;
-        }
-        
         var candy = await _halloweenService.AddManualCandies(targetUser.Id, amount);
 
         var responseEmbed = new EmbedBuilder()
@@ -104,16 +94,6 @@ public class HalloweenCommands : InteractionModuleBase
     public async Task TreatingAdd([Summary("target", "Usuario alvo")] IGuildUser targetUser,
         [Summary("amount", "Quantidade de travesuras")] int amount)
     {
-        if (targetUser.IsBot)
-        {
-            var isBotEmbed = new EmbedBuilder()
-                .WithTitle("O usuario selecionado é um bot")
-                .WithColor(OrangeColor);
-
-            await RespondAsync(embed: isBotEmbed.Build(), ephemeral: true);
-            return;
-        }
-        
         var treating = await _halloweenService.AddManualTreating(targetUser.Id, amount);
 
         var responseEmbed = new EmbedBuilder()
