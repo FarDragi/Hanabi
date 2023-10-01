@@ -5,5 +5,5 @@ namespace FarDragi.Hanabi.Repositories.Interfaces;
 
 public interface ICandyRepository : IBaseRepository<CandyEntity, ulong>
 {
-    
+    Task<IEnumerable<CandyEntity>> GetLeaderBoard(int page, int pageSize);
 }

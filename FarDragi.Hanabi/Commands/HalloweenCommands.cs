@@ -16,7 +16,7 @@ public class HalloweenCommands : InteractionModuleBase
         _halloweenService = halloweenService;
     }
 
-    [SlashCommand("treating", "Fazer uma travessura com alguém")]
+    [SlashCommand("trick", "Fazer uma travessura com alguém")]
     public async Task Treating([Summary("target", "Usuario alvo")] IGuildUser targetUser)
     {        
         if (targetUser.IsBot)
@@ -33,11 +33,11 @@ public class HalloweenCommands : InteractionModuleBase
 
         if (!ok)
         {
-            await RespondAsync("Você não tem travesuras a fazer");
+            await RespondAsync("Você não tem travesuras a fazer", ephemeral: true);
         }
         else
         {
-            await RespondAsync($"Travessura feita, {treating?.Count} travessuras restantes");
+            await RespondAsync($"Travessura feita, {treating?.Count} travessuras restantes", ephemeral: true);
         }
     }
 
@@ -72,7 +72,7 @@ public class HalloweenCommands : InteractionModuleBase
                     .WithValue((treating?.Count ?? 0).ToString())
             });
 
-        await RespondAsync(embed: embed.Build());
+        await RespondAsync(embed: embed.Build(), ephemeral: true);
     }
 
     [SlashCommand("candy-add", "Adicionar doces manualmente")]
@@ -96,10 +96,10 @@ public class HalloweenCommands : InteractionModuleBase
             .WithTitle($"{targetUser.DisplayName} agora esta com {candy.Count} doces")
             .WithColor(OrangeColor);
 
-        await RespondAsync(embed: responseEmbed.Build());
+        await RespondAsync(embed: responseEmbed.Build(), ephemeral: true);
     }
 
-    [SlashCommand("treating-add", "Adicionar travesuras manualmente")]
+    [SlashCommand("trick-add", "Adicionar travesuras manualmente")]
     [RequireUserPermission(GuildPermission.Administrator)]
     public async Task TreatingAdd([Summary("target", "Usuario alvo")] IGuildUser targetUser,
         [Summary("amount", "Quantidade de travesuras")] int amount)
@@ -120,6 +120,19 @@ public class HalloweenCommands : InteractionModuleBase
             .WithTitle($"{targetUser.DisplayName} agora esta com {treating.Count} travesuras")
             .WithColor(OrangeColor);
 
-        await RespondAsync(embed: responseEmbed.Build());
+        await RespondAsync(embed: responseEmbed.Build(), ephemeral: true);
+    }
+
+    [SlashCommand("leaderboard", "Listagem de quem tem amis doces")]
+    public async Task Leaderboard([Summary("page", "Pagina")] int page = 1)
+    {
+        var candies = await _halloweenService.GetLeaderboard(page);
+
+        var embed = new EmbedBuilder()
+            .WithTitle("Leaderboard")
+            .WithColor(OrangeColor)
+            .WithDescription(string.Join("\n", candies.Select(x => $"<@{x.Id}>: {x.Count}")));
+
+        await RespondAsync(embed: embed.Build(), ephemeral: true);
     }
 }

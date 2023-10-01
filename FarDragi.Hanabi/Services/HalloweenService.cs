@@ -194,4 +194,11 @@ public class HalloweenService : IHalloweenService
 
         return treating;
     }
+
+    public async Task<IEnumerable<CandyDto>> GetLeaderboard(int page)
+    {
+        var candies = await _candyRepository.GetLeaderBoard(page, 10);
+
+        return candies.Select(x => (CandyDto)x);
+    }
 }
