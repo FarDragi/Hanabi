@@ -67,7 +67,7 @@ public class HalloweenEvent : IAutoLoaderEvents
         if (await userMessage.GetOrDownloadAsync() is not IMessage message)
             return;
         
-        if (message.Reactions.TryGetValue(reaction.Emote, out var candyEmojiCount) && candyEmojiCount.ReactionCount != 2)
+        if (message.Reactions.TryGetValue(new Emoji(_pumpkin), out var candyEmojiCount) && candyEmojiCount.ReactionCount > 1)
             return;
         
         if (!candyEmojiCount.IsMe)
