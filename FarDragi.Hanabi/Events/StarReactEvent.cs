@@ -68,7 +68,7 @@ public class StarReactEvent : IAutoLoaderEvents
             "gif"
         };
 
-        var attachment = message.Attachments.FirstOrDefault(x => types.Any(y => x.Url.EndsWith(y)));
+        var attachment = message.Attachments.FirstOrDefault(x => types.Any(y => x.ContentType.EndsWith(y)));
         
         if (attachment is not null)
         {
