@@ -201,4 +201,23 @@ public class HalloweenService : IHalloweenService
 
         return candies.Select(x => (CandyDto)x);
     }
+
+    public async Task RemoveUser(ulong id)
+    {
+        var candy = await _candyRepository.GetById(id);
+
+        if (candy is not null)
+        {
+            _candyRepository.Delete(candy);
+            await _candyRepository.Commit();
+        }
+
+        var treating = await _treatingRepository.GetById(id);
+
+        if (treating is not null)
+        {
+            _treatingRepository.Delete(treating);
+            await _treatingRepository.Commit();
+        }
+    }
 }

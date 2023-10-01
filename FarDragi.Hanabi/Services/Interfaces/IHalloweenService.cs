@@ -14,4 +14,5 @@ public interface IHalloweenService
     Task<CandyDto> AddManualCandies(ulong userId, int amount);
     Task<TreatingDto> AddManualTreating(ulong userId, int amount);
     Task<IEnumerable<CandyDto>> GetLeaderboard(int page);
+    Task RemoveUser(ulong id);
 }

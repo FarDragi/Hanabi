@@ -117,4 +117,17 @@ public class HalloweenCommands : InteractionModuleBase
 
         await RespondAsync(embed: embed.Build(), ephemeral: true);
     }
+
+    [SlashCommand("remove", "Remover usuario do bando de dados")]
+    [RequireUserPermission(GuildPermission.Administrator)]
+    public async Task Remove([Summary("target", "Usuario alvo")] IGuildUser targetUser)
+    {
+        await _halloweenService.RemoveUser(targetUser.Id);
+
+        var embed = new EmbedBuilder()
+            .WithTitle("Usuario removido com sucesso")
+            .WithColor(OrangeColor);
+
+        await RespondAsync(embed: embed.Build(), ephemeral: true);
+    }
 }
