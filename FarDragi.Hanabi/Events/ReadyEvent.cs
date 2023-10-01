@@ -36,8 +36,6 @@ public class ReadyEvent : IAutoLoaderEvents
 
     private async Task DiscordClientOnReady()
     {
-        await _databaseMigrateService.Migrate();
-
         var commands = await _interactionService.RegisterCommandsToGuildAsync(_appConfig.Bot.OwnerGuild);
         _logger.LogInformation("Loaded {} Guild ({}) Commands", commands.Count, _appConfig.Bot.OwnerGuild);
     }

@@ -29,6 +29,7 @@ serviceCollection.AddLinaDbContext<Program>((builder, assembly) => builder.UseMy
 var services = serviceCollection.BuildServiceProvider();
 
 services.GetRequiredService<IEventLoaderService>().LoadEvents();
+await services.GetRequiredService<IDatabaseMigrateService>().Migrate();
 
 await interaction.AddModulesAsync(typeof(Program).Assembly, services);
 
