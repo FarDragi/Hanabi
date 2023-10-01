@@ -17,7 +17,7 @@ public class HalloweenEvent : IAutoLoaderEvents
     private readonly IDiscordClient _discordClient;
     
     private readonly string[] _candies = { "🍬", "🍭", "🍪", "🍩", "🧆", "🍫" };
-    private readonly string _pumpkin = "🎃";
+    private const string Pumpkin = "🎃";
 
     public HalloweenEvent(IAppConfig appConfig, IHalloweenService halloweenService, IDiscordClient discordClient)
     {
@@ -67,10 +67,14 @@ public class HalloweenEvent : IAutoLoaderEvents
         if (await userMessage.GetOrDownloadAsync() is not IMessage message)
             return;
         
-        if (message.Reactions.TryGetValue(new Emoji(_pumpkin), out _))
+
+        if (message.Reactions.TryGetValue(new Emoji(Pumpkin), out _))
             return;
         
-        if (!message.Reactions.TryGetValue(reaction.Emote, out var candyEmoji) && candyEmoji is { IsMe: true, ReactionCount: < 1 })
+        if (!message.Reactions.TryGetValue(reaction.Emote, out var candyEmoji) && candyEmoji is { IsMe: true, ReactionCount: <= 1 })
+            return;
+
+        if (reaction.User.GetValueOrDefault().IsBot) 
             return;
         
         var emoji = _candies.FirstOrDefault(x => Equals(new Emoji(x), reaction.Emote));
@@ -79,7 +83,7 @@ public class HalloweenEvent : IAutoLoaderEvents
             return;
 
         await _halloweenService.PickupCandy(reaction.UserId);
-        await message.AddReactionAsync(new Emoji(_pumpkin));
+        await message.AddReactionAsync(new Emoji(Pumpkin));
     }
 
     private async Task DiscordClientOnUserJoined(SocketGuildUser user)
