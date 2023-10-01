@@ -19,6 +19,6 @@ public class CandyRepository : BaseRepository<CandyEntity, ulong>, ICandyReposit
 
     public async Task<IEnumerable<CandyEntity>> GetLeaderBoard(int page, int pageSize)
     {
-        return await _dbContext.Set<CandyEntity>().Paginate(page, pageSize).ToListAsync();
+        return await _dbContext.Set<CandyEntity>().OrderBy(x => x.Count).Paginate(page, pageSize).ToListAsync();
     }
 }

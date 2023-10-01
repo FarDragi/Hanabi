@@ -128,10 +128,12 @@ public class HalloweenCommands : InteractionModuleBase
     {
         var candies = await _halloweenService.GetLeaderboard(page);
 
+        var count = ((page - 1) * 10) + 1;
+        
         var embed = new EmbedBuilder()
             .WithTitle("Leaderboard")
             .WithColor(OrangeColor)
-            .WithDescription(string.Join("\n", candies.Select(x => $"<@{x.Id}>: {x.Count}")));
+            .WithDescription(string.Join("\n", candies.Select(x => $"{count++}º - <@{x.Id}>: {x.Count}")));
 
         await RespondAsync(embed: embed.Build(), ephemeral: true);
     }
