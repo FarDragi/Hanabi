@@ -17,6 +17,7 @@ public class HalloweenEvent : IAutoLoaderEvents
     private readonly IDiscordClient _discordClient;
     
     private readonly string[] _candies = { "🍬", "🍭", "🍪", "🍩", "🧆", "🍫" };
+    private readonly string _pumpkin = "🎃";
 
     public HalloweenEvent(IAppConfig appConfig, IHalloweenService halloweenService, IDiscordClient discordClient)
     {
@@ -78,7 +79,7 @@ public class HalloweenEvent : IAutoLoaderEvents
             return;
 
         await _halloweenService.PickupCandy(reaction.UserId);
-        await message.RemoveAllReactionsForEmoteAsync(new Emoji(emoji));
+        await message.AddReactionAsync(new Emoji(_pumpkin));
     }
 
     private async Task DiscordClientOnUserJoined(SocketGuildUser user)
