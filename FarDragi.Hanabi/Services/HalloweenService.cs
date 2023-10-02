@@ -111,6 +111,7 @@ public class HalloweenService : IHalloweenService
         }
 
         await _candyRepository.Commit();
+        _candyRepository.DetachAllEntities();
 
         return candy;
     }
