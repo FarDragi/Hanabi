@@ -15,7 +15,7 @@ public class HalloweenEvent : IAutoLoaderEvents
     private readonly IAppConfig _appConfig;
     private readonly IHalloweenService _halloweenService;
     private readonly IDiscordClient _discordClient;
-    
+
     private readonly string[] _candies = { "🍬", "🍭", "🍪", "🍩", "🧆", "🍫" };
     private const string Pumpkin = "🎃";
 
@@ -35,7 +35,7 @@ public class HalloweenEvent : IAutoLoaderEvents
         discordClient.ReactionAdded += DiscordClientOnReactionAdded;
         discordClient.MessageReceived += DiscordClientOnMessageReceived;
     }
-    
+
     private async Task DiscordClientOnReady()
     {
         var guild = await _discordClient.GetGuildAsync(_appConfig.Bot.OwnerGuild);
@@ -66,19 +66,23 @@ public class HalloweenEvent : IAutoLoaderEvents
     {
         if (await userMessage.GetOrDownloadAsync() is not IMessage message)
             return;
-        
+
 
         if (message.Reactions.TryGetValue(new Emoji(Pumpkin), out _))
             return;
-        
-        if (!message.Reactions.TryGetValue(reaction.Emote, out var candyEmoji) && candyEmoji is { IsMe: true, ReactionCount: <= 1 })
+
+        if (message.Reactions.TryGetValue(reaction.Emote, out var otherEmoji) && otherEmoji is { IsMe: false })
             return;
 
-        if (reaction.User.GetValueOrDefault().IsBot) 
+        if (message.Reactions.TryGetValue(reaction.Emote, out var candyEmoji) &&
+            candyEmoji is { IsMe: true, ReactionCount: > 2 })
             return;
-        
+
+        if (reaction.User.GetValueOrDefault().IsBot)
+            return;
+
         var emoji = _candies.FirstOrDefault(x => Equals(new Emoji(x), reaction.Emote));
-        
+
         if (emoji is null)
             return;
 
@@ -97,11 +101,11 @@ public class HalloweenEvent : IAutoLoaderEvents
     {
         if (!_halloweenService.IsHalloween())
             return;
-        
+
         if (message.Channel.Id != _appConfig.Channels.CandyDrop)
             return;
 
-#if DEBUG            
+#if DEBUG
         await message.AddReactionAsync(new Emoji(_candies[new Random().Next(0, _candies.Length - 1)]));
 #else
         var random = new Random().Next(1, 100);
