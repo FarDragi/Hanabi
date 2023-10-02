@@ -51,6 +51,7 @@ public class HalloweenService : IHalloweenService
 
     public async Task DeleteInvite(string inviteId)
     {
+        _inviteRepository.DetachAllEntities();
         var invite = await _inviteRepository.GetById(inviteId);
         
         if (invite is null)
@@ -58,6 +59,7 @@ public class HalloweenService : IHalloweenService
         
         _inviteRepository.Delete(invite);
         await _inviteRepository.Commit();
+        _inviteRepository.DetachAllEntities();
     }
 
     public async Task<InviteDto> AddTreating(IEnumerable<InviteDto> invitesDto)
@@ -72,8 +74,19 @@ public class HalloweenService : IHalloweenService
         var candy = await _candyRepository.GetById(invite.UserId);
         var treating = await _treatingRepository.GetById(invite.UserId);
 
-        candy ??= new CandyEntity(invite.UserId);
-        treating ??= new TreatingEntity(invite.UserId);
+        if (candy is null)
+        {
+            candy = new CandyEntity(invite.UserId);
+            await _candyRepository.Add(candy);
+            await _candyRepository.Commit();
+        }
+
+        if (treating is null)
+        {
+            treating = new TreatingEntity(invite.UserId);
+            await _treatingRepository.Add(treating);
+            await _treatingRepository.Commit();
+        }
 
         try
         {
