@@ -103,7 +103,7 @@ public class HalloweenCommands : InteractionModuleBase
         await RespondAsync(embed: responseEmbed.Build(), ephemeral: true);
     }
 
-    [SlashCommand("leaderboard", "Listagem de quem tem amis doces")]
+    [SlashCommand("leaderboard", "Listagem de quem tem mais doces")]
     public async Task Leaderboard([Summary("page", "Pagina")] int page = 1)
     {
         var candies = await _halloweenService.GetLeaderboard(page);
