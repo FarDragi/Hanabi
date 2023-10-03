@@ -40,7 +40,7 @@ public class CandyEntity : BaseEntity<ulong>
         Count += value;
     }
 
-    public void Transfer(CandyEntity target, int quantity)
+    public void Transfer(CandyEntity target, int quantity, IAppConfig config)
     {
         if (!HalloweenEntity.IsHalloween())
             throw new HalloweenException("Não é mais halloween");
@@ -50,6 +50,9 @@ public class CandyEntity : BaseEntity<ulong>
         
         if (Count < quantity)
             throw new HalloweenException("Quantidade de doces insuficiente");
+        
+        if (config.Event.Exclude.Contains(Id))
+            throw new HalloweenException("Usuario excluido do evento");
 
         Count -= quantity;
         target.Count += quantity;

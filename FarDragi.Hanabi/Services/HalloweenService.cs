@@ -261,7 +261,7 @@ public class HalloweenService : IHalloweenService
             await _candyRepository.Commit();
         }
         
-        currentCandy.Transfer(targetCandy, quantity);
+        currentCandy.Transfer(targetCandy, quantity, _appConfig);
         _candyRepository.Update(currentCandy);
         _candyRepository.Update(targetCandy);
         await _candyRepository.Commit();
