@@ -1,4 +1,5 @@
-﻿using FarDragi.Hanabi.Exceptions;
+﻿using Discord;
+using FarDragi.Hanabi.Exceptions;
 using FarDragi.Hanabi.Models;
 using FarDragi.Hanabi.Models.Interfaces;
 using FarDragi.Hanabi.Repositories.Interfaces;
@@ -14,14 +15,16 @@ public class HalloweenService : IHalloweenService
     private readonly ITreatingRepository _treatingRepository;
     private readonly IInviteRepository _inviteRepository;
     private readonly IAppConfig _appConfig;
+    private readonly IDiscordClient _discordClient;
 
     public HalloweenService(ICandyRepository candyRepository, ITreatingRepository treatingRepository,
-        IInviteRepository inviteRepository, IAppConfig appConfig)
+        IInviteRepository inviteRepository, IAppConfig appConfig, IDiscordClient discordClient)
     {
         _candyRepository = candyRepository;
         _treatingRepository = treatingRepository;
         _inviteRepository = inviteRepository;
         _appConfig = appConfig;
+        _discordClient = discordClient;
     }
 
     public bool IsHalloween()
@@ -90,7 +93,9 @@ public class HalloweenService : IHalloweenService
 
         try
         {
-            invite.AddOneUse(treating, candy, _appConfig);
+            var user = await _discordClient.GetUserAsync(invite.UserId);
+            
+            invite.AddOneUse(treating, candy, _appConfig, user.IsBot);
 
             _candyRepository.Update(candy);
             await _candyRepository.Commit();

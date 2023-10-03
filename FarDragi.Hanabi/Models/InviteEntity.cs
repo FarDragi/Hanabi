@@ -24,9 +24,12 @@ public class InviteEntity : BaseEntity<string>
         Uses = uses;
     }
 
-    public void AddOneUse(TreatingEntity treating, CandyEntity candy, IAppConfig config)
+    public void AddOneUse(TreatingEntity treating, CandyEntity candy, IAppConfig config, bool isBot)
     {
         Uses++;
+        
+        if (isBot)
+            return;
 
         treating.AddTreating(1, config);
         candy.AddCandy(15, config);
