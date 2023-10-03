@@ -72,7 +72,7 @@ public class HalloweenService : IHalloweenService
         var invite = invites.FirstOrDefault(x => invitesDto.Any(y => x.Id == y.Id && x.Uses < y.Uses));
 
         if (invite is null)
-            throw new NotFoundException($"Treating not found");
+            throw new NotFoundException($"Invite not found");
         
         var candy = await _candyRepository.GetById(invite.UserId);
         var treating = await _treatingRepository.GetById(invite.UserId);

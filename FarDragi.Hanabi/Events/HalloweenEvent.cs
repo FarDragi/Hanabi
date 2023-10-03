@@ -30,7 +30,6 @@ public class HalloweenEvent : IAutoLoaderEvents
     {
         discordClient.Ready += DiscordClientOnReady;
         discordClient.InviteCreated += DiscordClientOnInviteCreated;
-        discordClient.InviteDeleted += DiscordClientOnInviteDeleted;
         discordClient.UserJoined += DiscordClientOnUserJoined;
         discordClient.ReactionAdded += DiscordClientOnReactionAdded;
         discordClient.MessageReceived += DiscordClientOnMessageReceived;
@@ -54,11 +53,6 @@ public class HalloweenEvent : IAutoLoaderEvents
     private async Task DiscordClientOnInviteCreated(SocketInvite invite)
     {
         await _halloweenService.UpdateInvite(new InviteDto(invite.Id, 0, invite.Inviter.Id));
-    }
-
-    private async Task DiscordClientOnInviteDeleted(SocketGuildChannel channel, string inviteCode)
-    {
-        await _halloweenService.DeleteInvite(inviteCode);
     }
 
     private async Task DiscordClientOnReactionAdded(Cacheable<IUserMessage, ulong> userMessage,
