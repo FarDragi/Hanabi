@@ -68,10 +68,6 @@ public class HalloweenEvent : IAutoLoaderEvents
         if (message.Reactions.TryGetValue(reaction.Emote, out var otherEmoji) && otherEmoji is { IsMe: false })
             return;
 
-        if (message.Reactions.TryGetValue(reaction.Emote, out var candyEmoji) &&
-            candyEmoji is { IsMe: true, ReactionCount: > 2 })
-            return;
-
         if (reaction.User.GetValueOrDefault().IsBot)
             return;
 
