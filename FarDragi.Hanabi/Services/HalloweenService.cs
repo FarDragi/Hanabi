@@ -239,4 +239,33 @@ public class HalloweenService : IHalloweenService
             await _treatingRepository.Commit();
         }
     }
+
+    public async Task<CandyDto> Transfer(ulong current, ulong target, int quantity)
+    {
+        _candyRepository.DetachAllEntities();
+
+        var currentCandy = await _candyRepository.GetById(current);
+        var targetCandy = await _candyRepository.GetById(target);
+
+        if (currentCandy is null)
+        {
+            currentCandy = new CandyEntity(current);
+            await _candyRepository.Add(currentCandy);
+            await _candyRepository.Commit();
+        }
+
+        if (targetCandy is null)
+        {
+            targetCandy = new CandyEntity(target);
+            await _candyRepository.Add(targetCandy);
+            await _candyRepository.Commit();
+        }
+        
+        currentCandy.Transfer(targetCandy, quantity);
+        _candyRepository.Update(currentCandy);
+        _candyRepository.Update(targetCandy);
+        await _candyRepository.Commit();
+
+        return targetCandy;
+    }
 }

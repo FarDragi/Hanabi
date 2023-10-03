@@ -15,4 +15,5 @@ public interface IHalloweenService
     Task<TreatingDto> AddManualTreating(ulong userId, int amount);
     Task<IEnumerable<CandyDto>> GetLeaderboard(int page);
     Task RemoveUser(ulong id);
+    Task<CandyDto> Transfer(ulong current, ulong target, int quantity);
 }

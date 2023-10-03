@@ -20,7 +20,7 @@ public class CandyEntity : BaseEntity<ulong>
     public bool TreatingCandy(TreatingEntity treating)
     {
         if (!HalloweenEntity.IsHalloween())
-            throw new HalloweenException("It is not Halloween");
+            throw new HalloweenException("Não é mais halloween");
 
         if (!treating.RemoveOne())
             return false;
@@ -31,13 +31,28 @@ public class CandyEntity : BaseEntity<ulong>
 
     public void AddCandy(int value, IAppConfig config)
     {
+        if (!HalloweenEntity.IsHalloween())
+            throw new HalloweenException("Não é mais halloween");
+        
         if (config.Event.Exclude.Contains(Id))
             throw new HalloweenException("User is exclude from event");
-        
-        if (!HalloweenEntity.IsHalloween())
-            throw new HalloweenException("It is not Halloween");
 
         Count += value;
+    }
+
+    public void Transfer(CandyEntity target, int quantity)
+    {
+        if (!HalloweenEntity.IsHalloween())
+            throw new HalloweenException("Não é mais halloween");
+
+        if (quantity < 1)
+            throw new HalloweenException("Não é possivel transferir menos que 1 doce");
+        
+        if (Count < quantity)
+            throw new HalloweenException("Quantidade de doces insuficiente");
+
+        Count -= quantity;
+        target.Count += quantity;
     }
 
     #region Conversions
