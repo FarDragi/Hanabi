@@ -163,7 +163,7 @@ public class HalloweenCommands : InteractionModuleBase
             var candy = await _halloweenService.Transfer(Context.User.Id, targetUser.Id, quantity);
 
             var embed = new EmbedBuilder()
-                .WithTitle($"<@{candy.Id}> agora esta com {candy.Count} doces")
+                .WithTitle($"{targetUser.DisplayName} agora esta com {candy.Count} doces")
                 .WithColor(OrangeColor);
 
             await RespondAsync(embed: embed.Build(), ephemeral: true);
