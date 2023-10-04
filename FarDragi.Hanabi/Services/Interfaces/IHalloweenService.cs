@@ -10,7 +10,7 @@ public interface IHalloweenService
     bool IsHalloween();
     Task<InviteDto> UpdateInvite(InviteDto inviteDto);
     Task DeleteInvite(string inviteId);
-    Task<InviteDto> AddTreating(IEnumerable<InviteDto> invitesDto);
+    Task<InviteDto> UserJoin(IEnumerable<InviteDto> invitesDto, ulong userId);
     Task<CandyDto> AddManualCandies(ulong userId, int amount);
     Task<TreatingDto> AddManualTreating(ulong userId, int amount);
     Task<IEnumerable<CandyDto>> GetLeaderboard(int page);

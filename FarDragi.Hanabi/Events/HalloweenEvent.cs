@@ -84,7 +84,8 @@ public class HalloweenEvent : IAutoLoaderEvents
     {
         var guildInvites = await user.Guild.GetInvitesAsync();
 
-        await _halloweenService.AddTreating(guildInvites.Select(x => new InviteDto(x.Id, x.Uses ?? 0, x.Inviter.Id)));
+        await _halloweenService.UserJoin(guildInvites.Select(x => new InviteDto(x.Id, x.Uses ?? 0, x.Inviter.Id)),
+            user.Id);
     }
 
     private async Task DiscordClientOnMessageReceived(SocketMessage message)

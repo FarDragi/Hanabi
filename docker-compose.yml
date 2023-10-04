@@ -15,6 +15,7 @@ services:
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
       BOT_OWNERGUILD: ${BOT_OWNERGUILD}
+      BOT_NICETOKEN: ${BOT_NICETOKEN}
       CHANNELS_STARBOARD: ${CHANNELS_STARBOARD}
       CHANNELS_CANDYDROP: ${CHANNELS_CANDYDROP}
       DATABASE_URL: Server=database;Database=hanabi;User Id=root;Password=${DATABASE_PASSWORD};

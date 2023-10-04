@@ -1,4 +1,5 @@
 ﻿using Discord;
+using FarDragi.Hanabi.Adapters.Interfaces;
 using FarDragi.Hanabi.Exceptions;
 using FarDragi.Hanabi.Models;
 using FarDragi.Hanabi.Models.Interfaces;
@@ -16,26 +17,29 @@ public class HalloweenService : IHalloweenService
     private readonly IInviteRepository _inviteRepository;
     private readonly IAppConfig _appConfig;
     private readonly IDiscordClient _discordClient;
+    private readonly IDiscordAdapter _discordAdapter;
 
     public HalloweenService(ICandyRepository candyRepository, ITreatingRepository treatingRepository,
-        IInviteRepository inviteRepository, IAppConfig appConfig, IDiscordClient discordClient)
+        IInviteRepository inviteRepository, IAppConfig appConfig, IDiscordClient discordClient,
+        IDiscordAdapter discordAdapter)
     {
         _candyRepository = candyRepository;
         _treatingRepository = treatingRepository;
         _inviteRepository = inviteRepository;
         _appConfig = appConfig;
         _discordClient = discordClient;
+        _discordAdapter = discordAdapter;
     }
 
     public bool IsHalloween()
     {
         return HalloweenEntity.IsHalloween();
     }
-    
+
     public async Task<InviteDto> UpdateInvite(InviteDto inviteDto)
     {
         var invite = await _inviteRepository.GetById(inviteDto.Id);
-        
+
         if (invite is null)
         {
             invite = inviteDto;
@@ -46,7 +50,7 @@ public class HalloweenService : IHalloweenService
             invite.UpdateUses(inviteDto.Uses);
             _inviteRepository.Update(invite);
         }
-        
+
         await _inviteRepository.Commit();
 
         return invite;
@@ -56,24 +60,22 @@ public class HalloweenService : IHalloweenService
     {
         _inviteRepository.DetachAllEntities();
         var invite = await _inviteRepository.GetById(inviteId);
-        
+
         if (invite is null)
             return;
-        
+
         _inviteRepository.Delete(invite);
         await _inviteRepository.Commit();
         _inviteRepository.DetachAllEntities();
     }
 
-    public async Task<InviteDto> AddTreating(IEnumerable<InviteDto> invitesDto)
+    public async Task<InviteDto> UserJoin(IEnumerable<InviteDto> invitesDto, ulong userId)
     {
         var invites = await _inviteRepository.GetAll(x => true);
-        
-        var invite = invites.FirstOrDefault(x => invitesDto.Any(y => x.Id == y.Id && x.Uses < y.Uses));
 
-        if (invite is null)
-            throw new NotFoundException($"Invite not found");
-        
+        var invite = invites.FirstOrDefault(x => invitesDto.Any(y => x.Id == y.Id && x.Uses < y.Uses)) ??
+                     await UserJoin(userId);
+
         var candy = await _candyRepository.GetById(invite.UserId);
         var treating = await _treatingRepository.GetById(invite.UserId);
 
@@ -94,7 +96,7 @@ public class HalloweenService : IHalloweenService
         try
         {
             var user = await _discordClient.GetUserAsync(invite.UserId);
-            
+
             invite.AddOneUse(treating, candy, _appConfig, user.IsBot);
 
             _candyRepository.Update(candy);
@@ -108,7 +110,7 @@ public class HalloweenService : IHalloweenService
             _inviteRepository.Update(invite);
             await _inviteRepository.Commit();
         }
-        
+
         return invite;
     }
 
@@ -144,10 +146,10 @@ public class HalloweenService : IHalloweenService
 
         if (!candy.TreatingCandy(treating))
             return (false, treating);
-        
+
         _treatingRepository.Update(treating);
         await _treatingRepository.Commit();
-        
+
         _candyRepository.Update(candy);
         await _candyRepository.Commit();
 
@@ -161,7 +163,7 @@ public class HalloweenService : IHalloweenService
 
         if (candy is not null && treating is not null)
             return (candy, treating);
-        
+
         if (candy is null && treating is not null)
             return (null, treating);
 
@@ -173,7 +175,6 @@ public class HalloweenService : IHalloweenService
 
     public async Task<CandyDto> AddManualCandies(ulong userId, int amount)
     {
-        
         var candy = await _candyRepository.GetById(userId);
 
         if (candy is null)
@@ -192,7 +193,7 @@ public class HalloweenService : IHalloweenService
 
         return candy;
     }
-    
+
     public async Task<TreatingDto> AddManualTreating(ulong userId, int amount)
     {
         var treating = await _treatingRepository.GetById(userId);
@@ -260,12 +261,27 @@ public class HalloweenService : IHalloweenService
             await _candyRepository.Add(targetCandy);
             await _candyRepository.Commit();
         }
-        
+
         currentCandy.Transfer(targetCandy, quantity, _appConfig);
         _candyRepository.Update(currentCandy);
         _candyRepository.Update(targetCandy);
         await _candyRepository.Commit();
 
         return targetCandy;
+    }
+
+    private async Task<InviteDto> UserJoin(ulong userid)
+    {
+        var userJoinData = await _discordAdapter.GetUserInvite(userid);
+
+        if (userJoinData is null)
+            throw new HalloweenException("Sem dados para esse convite");
+
+        var invite = await _inviteRepository.GetById(userJoinData.SourceInviteCode);
+
+        if (invite is null)
+            throw new HalloweenException("Falha em obter o convite");
+
+        return invite;
     }
 }
