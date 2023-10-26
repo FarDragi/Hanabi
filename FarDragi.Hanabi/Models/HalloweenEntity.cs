@@ -9,7 +9,9 @@ public class HalloweenEntity
 #if DEBUG
         return true;
 #else
-        return DateTimeOffset.Now.Month == 10;
+        var now = DateTimeOffset.Now;
+        now = now.AddHours(-3);
+        return now.Month == 10;
 #endif
     }
 }
